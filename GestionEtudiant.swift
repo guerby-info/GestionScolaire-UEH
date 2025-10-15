@@ -136,4 +136,66 @@ class Etudiant {
         }
         print(String(repeating: "-", count: 75))
     }
+func obtenirStringAnnee(_ annee: AnneeUniversitaire) -> String {
+        switch annee {
+        case .premiereAnnee: return "1ere Annee"
+        case .deuxiemeAnnee: return "2eme Annee"
+        case .troisiemeAnnee: return "3eme Annee"
+        case .quatriemeAnnee: return "4eme Annee"
+        case .cinquiemeAnnee: return "5eme Annee"
+        }
+    }
+    
+    func obtenirStringDomaine(_ domaine: DomaineEtude) -> String {
+        switch domaine {
+        case .sciencesInformatiques: return "Sciences Informatiques"
+        case .genieCivil: return "Genie Civil"
+        case .genieElectrique: return "Genie Electrique"
+        case .medecine: return "Medecine"
+        case .droit: return "Droit"
+        case .economie: return "Economie"
+        case .administration: return "Administration"
+        case .psychologie: return "Psychologie"
+        case .autres: return "Autres"
+        }
+    }
+}
 
+class GestionEtudiants {
+    private var etudiants: [Etudiant] = []
+    
+    func ajouterEtudiant(nom: String, prenom: String, age: Int, sexe: Sexe, annee: AnneeUniversitaire, domaine: DomaineEtude) -> Etudiant {
+        let etudiant = Etudiant(nom: nom, prenom: prenom, age: age, sexe: sexe, annee: annee, domaine: domaine)
+        etudiants.append(etudiant)
+        return etudiant
+    }
+    
+    func listerTousLesEtudiants() {
+        if etudiants.isEmpty {
+            print("\nAUCUN ETUDIANT ENREGISTRE")
+            return
+        }
+        
+        print("\n" + String(repeating: "=", count: 100))
+        print("LISTE GENERALE DES ETUDIANTS - UNIVERSITE D'ETAT D'HAITI")
+        print(String(repeating: "=", count: 100))
+        
+        print(String(format: "%-4s %-12s %-15s %-15s %-4s %-8s %-20s %-12s", 
+                    "NO", "ID", "PRENOM", "NOM", "SEXE", "AGE", "DOMAINE", "MOYENNE"))
+        print(String(repeating: "-", count: 100))
+        
+        for (index, etudiant) in etudiants.enumerated() {
+            let sexeSymbole = etudiant.sexe == .masculin ? "H" : "F"
+            let domaineString = etudiant.obtenirStringDomaine(etudiant.domaine)
+            let moyenne = etudiant.calculerMoyenne()
+            
+            print(String(format: "%-4d %-12s %-15s %-15s %-4s %-8d %-20s %-12.2f",
+                        index + 1,
+                        etudiant.id,
+                        etudiant.prenom,
+                        etudiant.nom,
+                        sexeSymbole,
+                        etudiant.age,
+                        domaineString,
+                        moyenne))
+        }
