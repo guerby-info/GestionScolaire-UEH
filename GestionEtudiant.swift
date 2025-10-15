@@ -200,3 +200,84 @@ class GestionEtudiants {
                         domaineString,
                         moyenne))
         }
+print(String(repeating: "-", count: 100))
+        
+        let totalEtudiants = etudiants.count
+        let hommes = etudiants.filter { $0.sexe == .masculin }.count
+        let femmes = etudiants.filter { $0.sexe == .feminin }.count
+        let moyenneGenerale = etudiants.map { $0.calculerMoyenne() }.reduce(0, +) / Double(totalEtudiants)
+        
+        print("STATISTIQUES:")
+        print("Total etudiants: \(totalEtudiants) | Hommes: \(hommes) | Femmes: \(femmes)")
+        print("Moyenne generale: \(String(format: "%.2f", moyenneGenerale))/100")
+        print(String(repeating: "=", count: 100))
+    }
+    
+    func trouverEtudiant(parNom nom: String, prenom: String) -> Etudiant? {
+        return etudiants.first { 
+            $0.nom.lowercased() == nom.lowercased() && 
+            $0.prenom.lowercased() == prenom.lowercased() 
+        }
+    }
+    
+    func trouverEtudiant(parID id: String) -> Etudiant? {
+        return etudiants.first { $0.id == id }
+    }
+    
+    func etudiantExiste(nom: String, prenom: String) -> Bool {
+        return trouverEtudiant(parNom: nom, prenom: prenom) != nil
+    }
+    
+    func obtenirTousLesEtudiants() -> [Etudiant] {
+        return etudiants
+    }
+    
+    func ajouterMatiereAEtudiant(id: String, nomMatiere: String, coefficient: Double, note: Double) -> Bool {
+        guard let indexEtudiant = etudiants.firstIndex(where: { $0.id == id }) else {
+            return false
+        }
+        
+        if etudiants[indexEtudiant].matieres.contains(where: { $0.nom.lowercased() == nomMatiere.lowercased() }) {
+            return false
+        }
+        
+        let matiere = Matiere(nom: nomMatiere, coefficient: coefficient, note: note)
+        etudiants[indexEtudiant].ajouterMatiere(matiere)
+        return true
+    }
+    
+    func ajouterNoteAEtudiant(id: String, nomMatiere: String, note: Double) -> Bool {
+        guard let indexEtudiant = etudiants.firstIndex(where: { $0.id == id }) else {
+            return false
+        }
+        
+        guard etudiants[indexEtudiant].matieres.contains(where: { $0.nom.lowercased() == nomMatiere.lowercased() }) else {
+            return false
+        }
+        
+        etudiants[indexEtudiant].ajouterNote(pour: nomMatiere, note: note)
+        return true
+    }
+    
+    func calculerMoyenneEtudiant(id: String) -> Double? {
+        guard let etudiant = trouverEtudiant(parID: id) else {
+            return nil
+        }
+        return etudiant.calculerMoyenne()
+    }
+    
+    func obtenirMatieresEtudiant(id: String) -> [Matiere]? {
+        guard let etudiant = trouverEtudiant(parID: id) else {
+            return nil
+        }
+        return etudiant.matieres
+    }
+    
+    func afficherBulletinEtudiant(id: String) -> Bool {
+        guard let etudiant = trouverEtudiant(parID: id) else {
+            return false
+        }
+        etudiant.afficherBulletin()
+        return true
+    }
+}
