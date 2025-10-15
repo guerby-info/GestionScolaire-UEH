@@ -1,6 +1,7 @@
 import Foundation
 
-// Énumérations pour votre partie
+// Énumération
+//Woodkely Erson Fritz JOSEPH
 enum Sexe {
     case masculin
     case feminin
