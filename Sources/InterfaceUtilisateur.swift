@@ -1,3 +1,6 @@
+//InterfaceUtilisateur.swift
+//Codé par RENE Guerby
+
 import Foundation
 
 class Validators {
